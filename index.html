@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Midnight at the Bakery</title>
+<style>
+:root{color-scheme:light;--pink:#df438e;--green:#1c9b57;--page:#092e40;--paper:#e8faf8;--accent:#2c9e9a}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at 50% 0,var(--page),#101b2b 95%);color:#39251c;font-family:Arial,sans-serif;min-height:100vh}
+button,input{font:inherit}
+button{cursor:pointer;border:1px solid #ffffff44;background:var(--page);color:#fff7e8;border-radius:10px;padding:12px 19px;font-weight:700}
+button:hover{filter:brightness(1.16)}
+button:focus-visible,input:focus-visible,[data-t]:focus-visible{outline:3px solid #e6aa28;outline-offset:4px}
+button:disabled{opacity:.4;cursor:default}
+.primary{background:linear-gradient(135deg,var(--accent),var(--page));border-color:var(--accent);box-shadow:0 4px 16px #17283724}
+.small{padding:9px 12px;font-size:14px}
+header{color:#fff3df;max-width:1170px;margin:auto;padding:20px 25px;display:flex;align-items:center;justify-content:space-between;gap:15px}
+.brand{font-size:17px;font-weight:900;letter-spacing:3px}.brand span{color:#b7f5eb}
+.header-actions{display:flex;gap:9px}
+.tag{font-size:12px;color:var(--accent);letter-spacing:3px;text-transform:uppercase}
+#theater{position:relative;max-width:1120px;height:300px;margin:0 auto 18px;overflow:hidden;border:2px solid var(--accent);border-radius:18px;box-shadow:0 20px 65px #0007}
+#scene{position:absolute;inset:0;width:100%;height:100%}
+.scene-label{position:absolute;left:24px;top:20px;color:#fff4d7;text-shadow:0 2px 5px #000;background:#102432d9;padding:10px 15px;border-left:3px solid #f1d191;pointer-events:none}
+.scene-label span{display:block;font-family:Georgia,serif;font-size:20px;letter-spacing:2px}
+.scene-label small{display:block;font-size:12px;margin-top:5px;color:#d3e5df}
+.scene-badge{position:absolute;right:20px;top:22px;border:1px solid #e9d7aa;background:var(--page);color:#ffe9b5;border-radius:30px;padding:10px 15px;font-size:13px;font-weight:bold}
+.hero{max-width:880px;margin:0 auto 30px;padding:22px 32px 30px;text-align:center;background:var(--paper);border:1px solid var(--accent);box-shadow:0 25px 100px #0007;border-radius:20px}
+.hero h1{font-family:Georgia,serif;font-size:55px;letter-spacing:2px;margin:18px 0 5px;color:var(--page)}
+.hero h2{font-size:26px;font-weight:400;color:#374654;margin:6px 0 20px}
+.hero p{font-size:18px;line-height:1.65;color:#374654;max-width:690px;margin:18px auto}
+.instructions{text-align:left;max-width:650px;margin:22px auto;padding:5px 0}
+.instructions div{padding:10px 0;font-size:17px;line-height:1.5;border-bottom:1px solid #35556625}
+.instructions b{color:#374654}
+.hero .primary{font-size:20px;padding:16px 35px;margin:14px 0}
+.progress{max-width:1120px;margin:0 auto 15px;padding:0 18px;display:grid;grid-template-columns:repeat(10,1fr);gap:9px}
+.node{height:7px;border-radius:6px;background:#e0f4ff33}
+.node.done{background:#8cf9b0;box-shadow:0 0 12px #62e8bb66}
+.node.active{background:#f3d7a2;box-shadow:0 0 15px #f4bc71}
+.console{max-width:1120px;margin:0 auto 30px;padding:26px 32px;background:var(--paper);border:1px solid var(--accent);border-radius:16px;box-shadow:0 20px 100px #0007}
+.mission-head{display:flex;align-items:center;justify-content:space-between;gap:15px}
+.mission-head h1{font-size:clamp(23px,4vw,32px);margin:7px 0 15px}
+.sector{color:#536779;font-size:14px;letter-spacing:1px}
+.chapter{font-size:16px;line-height:1.65;color:#374654;padding:12px 15px;background:color-mix(in srgb,var(--accent) 15%,var(--paper));border-radius:7px;margin:2px 0 13px}
+.chapter-label{display:block;font-size:10px;font-weight:900;letter-spacing:2px;margin-bottom:4px;color:var(--accent)}
+.story{font-size:clamp(21px,2.55vw,28px);line-height:1.85;margin:7px 0;padding:14px 17px;background:color-mix(in srgb,var(--accent) 5%,var(--paper));border-left:3px solid var(--accent);user-select:none}
+.question{font-size:clamp(21px,2.55vw,28px);line-height:1.8;padding:7px 17px 16px}
+.story [data-t],.question [data-t]{display:inline-block;position:relative;padding:0 6px;cursor:crosshair;border-radius:4px;touch-action:none}
+.marked:after{content:"";position:absolute;inset:3px -2px;border:3px solid var(--pink);border-radius:50%;pointer-events:none;transform:rotate(-3deg)}
+.marked.green:after{border-color:var(--green);transform:rotate(2deg)}
+.tools{display:flex;gap:13px;align-items:center;flex-wrap:wrap;padding:14px 0;margin-bottom:6px}
+.ring-tool{display:flex;gap:10px;align-items:center;padding:9px 14px;touch-action:none}
+.ring-icon{width:50px;height:27px;border:3px solid #ff8cc0;border-radius:50%;display:inline-block;transform:rotate(-7deg)}
+.green-ring{border-color:#86efac}.ring-tool.selected{box-shadow:0 0 0 2px var(--accent)}
+.tool-help{color:#536779;font-size:14px;line-height:1.6;flex:1;min-width:210px}.mark-count{font-size:13px}
+.ghost{position:fixed;z-index:30;width:86px;height:40px;border:4px solid var(--pink);border-radius:50%;pointer-events:none;transform:translate(-50%,-50%)}
+.answer-area{padding:19px 0 0;border-top:1px solid #45677940}
+.answer-row{display:flex;gap:12px;align-items:end;flex-wrap:wrap;margin-top:12px}
+.field{display:flex;flex-direction:column;gap:9px;flex:1;min-width:180px}
+.field label{font-size:17px;font-weight:700;color:#374654}
+.field input,.code-input{border:1px solid var(--accent);background:#ffffffd9;color:#243743;padding:13px 15px;border-radius:9px;font-size:27px;min-width:0;width:100%}
+.step-prompt{margin:5px 0 0;font-size:18px;line-height:1.6;color:#374654}
+.step-done{padding:11px 15px;background:#3b9a7015;color:#215f46;border-left:3px solid #70b48e;margin:0 0 16px;line-height:1.6}
+.locked{color:#536779;border:1px dashed #66778866;padding:14px;margin-top:17px;border-radius:9px;line-height:1.5}
+.feedback{min-height:28px;margin:15px 0 0;font-size:17px;line-height:1.6;color:#913c27}.feedback.good{color:#246947}
+.bottom{font-size:13px;color:#536779;margin-top:12px}
+.modal-backdrop{position:fixed;inset:0;background:#000c;z-index:40;display:grid;place-items:center;padding:20px}
+.modal{background:var(--paper);border:1px solid var(--accent);border-radius:20px;max-width:750px;width:100%;padding:30px;box-shadow:0 0 90px #0004;max-height:90vh;overflow:auto}
+.modal h2{font-size:29px;margin:0 0 12px}.reward{text-align:center}.reward p{font-size:18px;line-height:1.6}
+.code{font-size:70px;color:var(--page);letter-spacing:18px;font-weight:900;margin:18px 0 10px}
+.ledger-grid,.code-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:22px 0}
+.ledger-item{padding:15px 5px;border:1px solid #65798b44;border-radius:9px;text-align:center}
+.ledger-item small{display:block;color:#536779;margin-bottom:9px}.ledger-item strong{font-size:23px;letter-spacing:4px}
+.code-grid label{font-size:13px;color:#536779}.code-input{font-size:23px;letter-spacing:4px;margin-top:8px;text-align:center;padding:12px 4px}
+.muted{color:#536779}.flex{display:flex;gap:12px;flex-wrap:wrap}
+.reward-seal{width:118px;height:118px;margin:0 auto 18px;display:grid;place-items:center;border-radius:50%;background:repeating-conic-gradient(#f5d998 0deg 10deg,#b9853c 10deg 20deg);box-shadow:0 0 0 5px #d6a85f55,0 10px 25px #704b3333;animation:sealArrival 1s cubic-bezier(.2,.8,.2,1)}
+.seal-core{width:90px;height:90px;display:grid;place-items:center;border:3px double #9b6d2f;border-radius:50%;background:radial-gradient(circle at 30% 25%,#fff4c6,#d7a74e);font-family:Georgia,serif;font-size:48px;color:#77501f}
+@keyframes sealArrival{from{transform:translateY(60px) rotate(-140deg) scale(.15);opacity:0}to{transform:none;opacity:1}}
+body.escaped{overflow:hidden}body.escaped header,body.escaped .scene-label,body.escaped .scene-badge{display:none}
+body.escaped #theater{position:fixed;inset:0;max-width:none;height:100vh;margin:0;border:0;border-radius:0}
+.escape-cinema{position:fixed;inset:0;z-index:5;display:grid;place-items:center;perspective:1500px}
+.door-frame{position:absolute;inset:0;perspective:1200px;pointer-events:none}
+.door-leaf{position:absolute;top:0;bottom:0;width:50%;background:linear-gradient(90deg,#392a24,#77503b 14%,#a67549 49%,#67442e 94%,#30231e);border:10px ridge #95643c;box-shadow:inset 0 0 60px #24190eaa,0 0 50px #0009;backface-visibility:hidden;animation:doorOpen 3.8s cubic-bezier(.4,0,.2,1) .7s forwards}
+.door-leaf.left{left:0;transform-origin:left center;--swing:-105deg}.door-leaf.right{right:0;transform-origin:right center;--swing:105deg}
+.door-glass{position:absolute;inset:8% 14% 37%;border:10px ridge #b88c56;background:linear-gradient(125deg,#1a2836da,#567780b3 40%,#d5bd8d99);box-shadow:inset 0 0 30px #0f1b23}
+.door-glass:after{content:'SUGAR & STARS';position:absolute;inset:30% 0;text-align:center;color:#f8deb0;font-family:Georgia,serif;font-size:clamp(13px,3vw,32px);letter-spacing:3px}
+.door-panel{position:absolute;inset:68% 14% 8%;border:12px ridge #9d7246;box-shadow:inset 0 0 30px #382519}
+.door-handle{position:absolute;top:53%;width:13px;height:80px;border-radius:20px;background:linear-gradient(90deg,#7b5329,#ffe9aa,#9f7338);box-shadow:4px 6px 8px #0006}
+.left .door-handle{right:7%}.right .door-handle{left:7%}
+@keyframes doorOpen{to{transform:rotateY(var(--swing));opacity:.2}}
+.escape-message{position:relative;text-align:center;max-width:780px;margin:20px;padding:28px 35px;border:1px solid #f8e0aa;background:#fff7e9eb;border-radius:20px;box-shadow:0 20px 80px #51371e77;animation:escapeArrival 1.5s ease 3.2s both}
+.escape-message h1{font-family:Georgia,serif;font-size:clamp(34px,6vw,68px);color:#704125;margin:10px 0}
+.escape-message p{font-size:19px;line-height:1.6}.escape-message .ending{font-size:17px;color:#795b47}
+.ribbon{display:inline-block;padding:12px 24px;background:#43715b;color:#fff5d9;letter-spacing:3px;font-size:14px;margin:10px 0;border:3px double #a9c4a4}
+@keyframes escapeArrival{from{opacity:0;transform:translateY(40px) scale(.9)}to{opacity:1;transform:none}}
+.at-door #theater{height:330px}
+@media(max-width:680px){
+header{padding:14px;flex-wrap:wrap}.brand{font-size:15px;letter-spacing:2px}.header-actions{gap:5px;margin-left:auto}.header-actions button{font-size:12px;padding:8px}
+#theater{height:240px;margin:0 10px 13px}.at-door #theater{height:260px}.scene-label{left:12px;top:12px;padding:8px}.scene-label span{font-size:15px}.scene-label small{max-width:170px;font-size:10px}.scene-badge{right:10px;top:12px;padding:8px;font-size:11px}
+.hero{margin:0 10px 20px;padding:22px 18px}.hero h1{font-size:40px}.hero h2{font-size:22px}.console{margin:0 10px 20px;padding:18px 15px}.chapter{font-size:15px}
+.story,.question{padding-left:10px;padding-right:8px;line-height:2}.tools{gap:9px}.ring-tool{font-size:13px;padding:9px}.ring-icon{width:34px;height:24px}.tool-help{flex-basis:100%}
+.ledger-grid,.code-grid{grid-template-columns:repeat(2,1fr)}.modal{padding:22px}.code{font-size:57px}.mission-head{align-items:start}.answer-row button{width:100%}.escape-message{padding:22px 18px;margin:15px}.escape-message p{font-size:16px}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;scroll-behavior:auto!important}.door-leaf{animation:doorOpen .01s forwards!important}.escape-message{animation:none!important}}
+</style>
+</head>
+<body>
+<header><div class="brand">MIDNIGHT <span>BAKERY</span></div><div class="header-actions"><button class="small" id="sound">Sound: on</button><button class="small" id="log">Code log</button><button class="small" id="restart">Restart</button></div></header>
+<section id="theater" aria-label="Animated bakery scene"><canvas id="scene" aria-hidden="true"></canvas><div class="scene-label"><span id="sceneTitle">SUGAR & STARS BAKERY</span><small id="sceneCaption">A midnight mystery is about to begin</small></div><div class="scene-badge" id="sealCount">0 / 10 seals</div></section>
+<main id="app"></main><div id="overlay"></div>
+<script>
+(()=>{
+'use strict';
+const missions=[
+{room:'Bread Counter',title:'Unlock the bread counter',story:'A bakery made {268 rolls} in the morning and {157 rolls} in the afternoon.',question:'How many {rolls} did the bakery make in all?',answer:425,code:'731'},
+{room:'Cookie Case',title:'Open the cookie case',story:'A bakery had a total of {742 cookies}. Customers bought {286 cookies}.',question:'How many {cookies} does the bakery have left?',answer:456,code:'284'},
+{room:'Dessert Cart',title:'Release the dessert cart',story:'A dessert cart earned {$235 in sales} on Friday and {$186 in sales} on Saturday.',question:'How much {money} did the cart make both days?',answer:421,code:'956'},
+{room:'Muffin Rack',title:'Unlock the muffin rack',story:'A baker made {624 muffins} on Monday and {358 muffins} on Tuesday.',question:'How many more {muffins} did the baker make on Monday than on Tuesday?',answer:266,code:'413'},
+{room:'Recipe Cabinet',title:'Open the recipe cabinet',story:'A bakery made {900 cookies}. Of those, {245 cookies} were chocolate chip and {178 cookies} were oatmeal. The rest were sugar cookies.',question:'How many {sugar cookies} were there?',step:'How many chocolate chip and oatmeal cookies were there in all?',first:423,answer:477,code:'862'},
+{room:'Bagel Basket',title:'Unlock the bagel basket',story:'A bakery had {356 bagels}. A baker made {278 bagels}. Customers bought {419 bagels}.',question:'How many {bagels} does the bakery have left?',step:'How many bagels did the bakery have before customers bought any?',first:634,answer:215,code:'597'},
+{room:'Packing Station',title:'Release the packing station',story:'A bakery had {725 cupcake boxes}. Workers used {368 cupcake boxes}. Then a delivery brought {246 cupcake boxes}.',question:'How many {cupcake boxes} does the bakery have now?',step:'How many cupcake boxes were left after workers used some, before the delivery?',first:357,answer:603,code:'148'},
+{room:'Pie Display',title:'Unlock the pie display',story:'A bakery sold {328 pies} on Friday and {259 pies} on Saturday.',question:'How many {pies} did the bakery sell both days?',answer:587,code:'625'},
+{room:'Cupcake Stand',title:'Open the cupcake stand',story:'A bakery had a total of {700 cupcakes}. Customers bought {247 cupcakes}.',question:'How many {cupcakes} does the bakery have left?',answer:453,code:'379'},
+{room:'Front Counter',title:'Find the final door code',story:'A bakery had {1,000 pastries}. It sold {276 pastries} on Friday and {348 pastries} on Saturday.',question:'How many {pastries} does the bakery have left?',step:'How many pastries did the bakery sell both days?',first:624,answer:376,code:'804'}
+];
+const chapters=[
+'The midnight bell rings. A brass lock clicks shut on the bread counter. A folded note says: Begin where the fresh rolls cool.',
+'A tiny drawer slides open beneath the bread counter. Inside is a clue: The cookie case holds the next recipe seal.',
+'Behind the cookie tray, you discover a golden wheel. It fits the dessert cart, but its number lock is still closed.',
+'The cart rolls aside to reveal a narrow passage. At the end, the muffin rack glows beneath a copper lamp.',
+'A recipe card flutters out from the muffin rack. Its flour-dusted arrow points toward a locked oak cabinet.',
+'The cabinet opens with a warm wooden creak. Inside, a note reads: Your next seal waits beside the bagel baskets.',
+'A paper trail leads from the bagel baskets to the packing table. Someone has hidden a seal beneath a stack of bakery boxes.',
+'As the packing station opens, a little bell chimes. The pie display turns slowly, revealing another brass lock.',
+'The pie stand reveals a silver cake server. Engraved on its handle: Look beneath the tallest cupcake stand.',
+'Nine seals shimmer in your recipe book. One final lock waits at the front counter. Beyond it, the front door begins to glow.'
+];
+const themes=[
+['#143d62','#eaf5ff','#213f60','#4b91c1'],
+['#65364f','#fff0f7','#78445c','#b95381'],
+['#423369','#f3efff','#594574','#8c6db8'],
+['#6c3542','#fff0e9','#8e4f48','#bc6658'],
+['#264d3e','#edf8ee','#3f6650','#5b8e60'],
+['#194f59','#e8fbfa','#2b6972','#3b99a1'],
+['#35456d','#eef1ff','#4e6093','#6b7fbd'],
+['#6b3457','#fff0f9','#86466c','#b96292'],
+['#555225','#fffde6','#736d3b','#958a39'],
+['#204658','#edfaff','#38687d','#4e98b3']
+];
+const $=id=>document.getElementById(id),app=$('app'),overlay=$('overlay');
+let state={index:0,codes:[],stage:1,started:false,escaped:false,marks:[]},selected='pink',soundOn=true,sceneIndex=0,launch=false,rewardAt=-100,escapeAt=0;
+const storage='midnight-bakery-word-missions-v2';
+function setTheme(){
+ const v=state.started?themes[Math.min(state.index,9)]:['#092e40','#e8faf8','#174758','#2c9e9a'],r=document.documentElement;
+ r.style.setProperty('--page',v[0]);r.style.setProperty('--paper',v[1]);r.style.setProperty('--accent',v[3]);
+}
+function save(){try{localStorage.setItem(storage,JSON.stringify(state))}catch(e){}}
+try{
+ const v=JSON.parse(localStorage.getItem(storage)||'null');
+ if(v&&Number.isInteger(v.index)&&v.index>=0&&v.index<=10&&Array.isArray(v.codes)&&v.codes.length===v.index&&v.codes.every((c,i)=>c===missions[i].code)&&(!v.escaped||v.index===10)){
+  state={...state,...v};if(state.stage!==2)state.stage=1;if(!Array.isArray(state.marks))state.marks=[];if(state.index<10&&!missions[state.index].first)state.stage=1;
+ }
+}catch(e){}
+let audio;
+function tone(kind){
+ if(!soundOn)return;
+ try{
+  audio=audio||new(window.AudioContext||window.webkitAudioContext)();audio.resume();
+  const now=audio.currentTime,notes=kind==='win'?[261.63,329.63,392,523.25]:kind==='step'?[329.63,440,554.37]:[146.83,174.61];
+  notes.forEach((f,i)=>{
+   const o=audio.createOscillator(),g=audio.createGain();o.type='triangle';o.frequency.value=f;
+   g.gain.setValueAtTime(0,now+i*.09);g.gain.linearRampToValueAtTime(.045,now+i*.09+.025);g.gain.exponentialRampToValueAtTime(.0001,now+i*.09+(kind==='win'?1.5:.65));
+   o.connect(g);g.connect(audio.destination);o.start(now+i*.09);o.stop(now+i*.09+1.6);
+  });
+ }catch(e){}
+}
+function msg(t,good=false){const f=$('feedback');if(f){f.textContent=t;f.className='feedback'+(good?' good':'');f.scrollIntoView({block:'nearest',behavior:'smooth'});}}
+function targetText(t,type){let n=0;return t.replace(/\{([^}]+)\}/g,(_,s)=>`<span tabindex="0" data-t="${type}${n++}" data-color="${type==='n'?'pink':'green'}">${s}</span>`);}
+function expectedMarks(){return [...document.querySelectorAll('[data-t]')].map(x=>x.dataset.t)}
+function applyMarks(){
+ document.querySelectorAll('[data-t]').forEach(el=>{el.classList.toggle('marked',state.marks.includes(el.dataset.t));el.classList.toggle('green',el.dataset.color==='green');});
+ const c=$('markCount');if(c)c.textContent=`${state.marks.length} of ${expectedMarks().length} circles placed`;
+}
+function mark(el,color){
+ if(!el)return;if(color!==el.dataset.color){msg('Use pink for a number with its noun. Use green for what the question asks you to find.');return;}
+ if(!state.marks.includes(el.dataset.t)){state.marks.push(el.dataset.t);tone('step');}
+ applyMarks();save();msg('Circle placed. You can drag a placed circle to move it.');
+}
+function choose(color){selected=color;document.querySelectorAll('.ring-tool').forEach(b=>{b.classList.toggle('selected',b.dataset.color===color);b.setAttribute('aria-pressed',String(b.dataset.color===color));});}
+let drag=null;
+function startDrag(e,color,origin=null){
+ if(e.button!==undefined&&e.button!==0)return;e.preventDefault();choose(color);
+ const g=document.createElement('div');g.className='ghost';g.style.borderColor=color==='green'?'var(--green)':'var(--pink)';g.style.left=e.clientX+'px';g.style.top=e.clientY+'px';document.body.append(g);
+ drag={g,color,origin,x:e.clientX,y:e.clientY,moved:false};
+}
+document.addEventListener('pointermove',e=>{
+ if(!drag)return;drag.g.style.left=e.clientX+'px';drag.g.style.top=e.clientY+'px';drag.moved=drag.moved||Math.abs(e.clientX-drag.x)+Math.abs(e.clientY-drag.y)>8;
+},{passive:true});
+document.addEventListener('pointerup',e=>{
+ if(!drag)return;const d=drag;drag=null;d.g.remove();const el=document.elementFromPoint(e.clientX,e.clientY)?.closest('[data-t]');
+ if(d.origin&&!d.moved)return;
+ if(el){if(el.dataset.color===d.color&&d.origin&&d.origin!==el.dataset.t)state.marks=state.marks.filter(t=>t!==d.origin);mark(el,d.color);}
+ else if(d.origin&&d.moved){state.marks=state.marks.filter(t=>t!==d.origin);applyMarks();save();}
+},{passive:true});
+document.addEventListener('pointercancel',()=>{if(drag){drag.g.remove();drag=null;}});
+function bindMarking(){
+ document.querySelectorAll('.ring-tool').forEach(b=>{b.onpointerdown=e=>startDrag(e,b.dataset.color);b.onclick=()=>choose(b.dataset.color);});
+ document.querySelectorAll('[data-t]').forEach(el=>{
+  el.onpointerdown=e=>{if(state.marks.includes(el.dataset.t))startDrag(e,el.dataset.color,el.dataset.t);else{e.preventDefault();mark(el,selected);}};
+  el.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();mark(el,selected);}};
+ });
+ $('clear').onclick=()=>{state.marks=[];applyMarks();save();msg('Circles cleared.');};applyMarks();
+}
+function render(){
+ setTheme();overlay.innerHTML='';document.body.classList.toggle('escaped',!!state.escaped);document.body.classList.toggle('at-door',state.index===10&&!state.escaped);
+ $('sceneTitle').textContent=state.started?(state.index<10?missions[state.index].room.toUpperCase():'THE FRONT DOOR'):'SUGAR & STARS BAKERY';
+ $('sceneCaption').textContent=state.started?'Explore the bakery. Recover the missing recipe seals.':'A midnight mystery is about to begin';
+ $('sealCount').textContent=state.codes.length+' / 10 seals';$('log').disabled=!state.started;$('restart').disabled=!state.started;sceneIndex=Math.min(state.index,9);
+ if(state.escaped){
+  launch=true;escapeAt=performance.now();
+  app.innerHTML=`<section class="escape-cinema" aria-label="Animated bakery escape"><div class="door-frame"><div class="door-leaf left"><div class="door-glass"></div><div class="door-panel"></div><span class="door-handle"></span></div><div class="door-leaf right"><div class="door-glass"></div><div class="door-panel"></div><span class="door-handle"></span></div></div><div class="escape-message"><div class="tag">All ten recipe seals recovered</div><h1>YOU ESCAPED!</h1><p>The brass locks release. The bakery doors swing open.<br>You step into the sunrise as Sugar & Stars comes to life!</p><div class="ribbon">GRAND OPENING CREW</div><p class="ending">Grandma Rose smiles. “Every great baker solves a few problems along the way.”</p><button class="primary" id="again">Play again</button></div></section>`;
+  $('again').onclick=resetDialog;return;
+ }
+ if(!state.started){
+  app.innerHTML=`<section class="hero"><div class="tag">A bakery escape adventure</div><h1>MIDNIGHT<br>AT THE BAKERY</h1><h2>The midnight bell. The missing recipe seals.</h2><p>You’re helping Grandma Rose prepare Sugar & Stars for its grand opening. At midnight, her puzzle locks click shut! Her recipe book holds a note: “Find ten recipe seals. Each one has a secret code. Together, they open the front door.” Can you follow the clues and escape before the first customers arrive?</p><div class="instructions"><div><b>1. Mark the story.</b> Drag pink circles around each number with its noun. Drag green circles around what the question asks you to find.</div><div><b>2. Solve the problem.</b> Type your answer. Some missions have two steps. Correctly solve step 1 to unlock step 2.</div><div><b>3. Collect the codes.</b> Write down each code. Enter all ten at the front door to escape.</div></div><p class="muted">Have paper or a whiteboard ready for your work.</p><button class="primary" id="begin">Enter the bakery</button></section>`;
+  $('begin').onclick=()=>{state.started=true;save();tone('win');render();};return;
+ }
+ if(state.index===10){renderExit();return;}
+ const q=missions[state.index];
+ app.innerHTML=`<nav class="progress" aria-label="Mission progress">${missions.map((_,i)=>`<div class="node ${i<state.index?'done':i===state.index?'active':''}" title="Mission ${i+1}"></div>`).join('')}</nav><section class="console"><div class="mission-head"><div><div class="tag">Mission ${state.index+1} of 10</div><h1>${q.title}</h1></div><div class="sector">${q.room}</div></div><div class="chapter"><span class="chapter-label">THE STORY</span>${chapters[state.index]}</div><div class="story">${targetText(q.story,'n')}</div><div class="question">${targetText(q.question,'q')}</div><div class="tools"><button class="ring-tool selected" data-color="pink" aria-label="Select or drag a pink circle"><span class="ring-icon"></span>Pink circle</button><button class="ring-tool" data-color="green" aria-label="Select or drag a green circle"><span class="ring-icon green-ring"></span>Green circle</button><button class="small" id="clear">Clear circles</button><div class="tool-help">Drag a circle onto the words, or choose a circle and tap the words. Your answer unlocks the station.<br><span class="mark-count" id="markCount"></span></div></div><div class="answer-area" id="answerArea"></div><p id="feedback" class="feedback" role="status" aria-live="polite"></p><div class="bottom">Work out the problem on paper or a whiteboard. Type numbers only.</div></section>`;
+ choose(selected);bindMarking();renderAnswer();
+}
+function renderAnswer(){
+ const q=missions[state.index],two=!!q.first,second=state.stage===2;
+ $('answerArea').innerHTML=`${two&&second?`<div class="step-done">Step 1 complete: <b>${q.first}</b>. Now finish the original question.</div>`:''}${two?`<div class="tag">Step ${second?2:1} of 2</div><p class="step-prompt">${second?q.question.replace(/[{}]/g,''):q.step}</p>`:''}<form id="answerForm" class="answer-row" novalidate><div class="field"><label for="answer">${two?(second?'Step 2: final answer':'Step 1: answer'):'Final answer'}</label><input id="answer" type="text" inputmode="numeric" autocomplete="off" maxlength="10" placeholder="Type a number" aria-describedby="feedback"></div><button class="primary" id="unlockAnswer" type="button">${two&&!second?'Check step 1':'Unlock station'}</button></form>${two&&!second?'<div class="locked">Step 2 is locked. Complete step 1 to continue.</div>':''}`;
+ $('answerForm').onsubmit=e=>{e.preventDefault();checkAnswer();};$('unlockAnswer').onclick=checkAnswer;
+}
+function parseNumber(s){s=s.trim();if(!/^\$?\s*\d+(?:,\d{3})*(?:\.00)?$/.test(s))return NaN;return Number(s.replace(/[$,\s]/g,''));}
+function checkAnswer(){
+ const q=missions[state.index],n=parseNumber($('answer').value);
+ if(!Number.isFinite(n)){msg('Type your answer as a number.');$('answer').focus();return;}
+ const expected=q.first&&state.stage===1?q.first:q.answer;
+ if(n!==expected){tone('wrong');msg('That result does not open the lock. Check your work and try again.');return;}
+ if(q.first&&state.stage===1){state.stage=2;save();tone('step');renderAnswer();msg('Step 1 is correct. Step 2 is unlocked.',true);$('answer').focus();return;}
+ tone('win');showReward();
+}
+function showReward(){
+ rewardAt=performance.now();const q=missions[state.index];
+ overlay.innerHTML=`<div class="modal-backdrop"><section class="modal reward" role="dialog" aria-modal="true" aria-labelledby="rewardTitle"><div class="reward-seal" aria-hidden="true"><div class="seal-core">${state.index+1}</div></div><div class="tag">Recipe seal recovered</div><h2 id="rewardTitle">The lock clicks open!</h2><p>A golden recipe seal rises from the ${q.room.toLowerCase()}. Write down its secret code.</p><div class="code">${q.code}</div><p>This code is also kept in your code log.</p><button class="primary" id="next">${state.index===9?'Go to the front door':'Continue to the next bakery station'}</button></section></div>`;
+ $('next').focus();$('next').onclick=()=>{state.codes.push(q.code);state.index++;state.stage=1;state.marks=[];save();render();window.scrollTo(0,0);};
+}
+function renderExit(){
+ sceneIndex=9;
+ app.innerHTML=`<section class="hero"><div class="tag">The final lock</div><h1 style="font-size:42px">OPEN THE BAKERY DOOR</h1><p>Your recipe book glows with all ten seals. The final brass lock wakes up. Enter each secret code in order, then turn the handle to step outside!</p><div id="exitForm"><div class="code-grid">${missions.map((_,i)=>`<label for="code${i}">Mission ${i+1}<input class="code-input" id="code${i}" inputmode="numeric" autocomplete="off" maxlength="3" aria-label="Code from mission ${i+1}"></label>`).join('')}</div><button type="button" id="openDoor" class="primary">Turn the handle & escape</button></div><p id="feedback" class="feedback" role="status" aria-live="polite"></p><button id="viewLog">View code log</button></section>`;
+ $('viewLog').onclick=showLog;
+ $('openDoor').onclick=()=>{
+  const bad=missions.findIndex((q,i)=>$('code'+i).value.trim()!==q.code);
+  if(bad>=0){msg('Check mission '+(bad+1)+': type its three-digit code from your code log, then turn the handle.');$('code'+bad).focus();tone('wrong');return;}
+  state.escaped=true;save();tone('win');render();
+ };
+ document.querySelectorAll('.code-input').forEach((el,i)=>{el.oninput=()=>{el.value=el.value.replace(/\D/g,'');if(el.value.length===3&&i<9)$('code'+(i+1)).focus();};el.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();$('openDoor').click();}};});
+}
+function showLog(){
+ overlay.innerHTML=`<div class="modal-backdrop"><section class="modal" role="dialog" aria-modal="true" aria-labelledby="logTitle"><h2 id="logTitle">Recovered access codes</h2><p class="muted">Use these codes at the front door.</p><div class="ledger-grid">${missions.map((_,i)=>`<div class="ledger-item"><small>Mission ${i+1}</small><strong>${state.codes[i]||'—'}</strong></div>`).join('')}</div><button class="primary" id="close">Return to mission</button></section></div>`;
+ $('close').focus();$('close').onclick=()=>{overlay.innerHTML='';};
+}
+function resetDialog(){
+ overlay.innerHTML=`<div class="modal-backdrop"><section class="modal" role="dialog" aria-modal="true" aria-labelledby="resetTitle"><h2 id="resetTitle">Restart the mission?</h2><p>Your answers and collected codes will be cleared.</p><div class="flex"><button id="cancel">Keep playing</button><button class="primary" id="resetYes">Restart from mission 1</button></div></section></div>`;
+ $('cancel').focus();$('cancel').onclick=()=>overlay.innerHTML='';$('resetYes').onclick=()=>{state={index:0,codes:[],stage:1,started:false,escaped:false,marks:[]};launch=false;save();render();};
+}
+$('log').onclick=showLog;$('restart').onclick=resetDialog;
+$('sound').onclick=()=>{soundOn=!soundOn;$('sound').textContent='Sound: '+(soundOn?'on':'off');if(soundOn)tone('step');};
+
+const canvas=$('scene'),ctx=canvas.getContext('2d');let W=0,H=0;
+function resize(){const d=Math.min(devicePixelRatio||1,1.5);W=$('theater').clientWidth;H=$('theater').clientHeight;canvas.width=W*d;canvas.height=H*d;ctx.setTransform(d,0,0,d,0,0);}
+window.addEventListener('resize',resize);resize();
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+function rect(x,y,w,h,c){ctx.fillStyle=c;ctx.fillRect(x,y,w,h);}
+function ellipse(x,y,rx,ry,c){ctx.beginPath();ctx.ellipse(x,y,rx,ry,0,0,Math.PI*2);ctx.fillStyle=c;ctx.fill();}
+function line(x,y,x2,y2,color,width=2){ctx.strokeStyle=color;ctx.lineWidth=width;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x2,y2);ctx.stroke();}
+function label(value,x,y,size=20,color='#fff6df'){ctx.fillStyle=color;ctx.font='bold '+size+'px Georgia';ctx.textAlign='center';ctx.fillText(value,x,y);}
+function bread(x,y,r,kind){
+ ctx.save();ctx.translate(x,y);ctx.scale(r/50,r/50);ctx.shadowColor='#1d0d09aa';ctx.shadowBlur=13;ctx.shadowOffsetY=8;
+ const g=ctx.createLinearGradient(0,-40,0,30);g.addColorStop(0,'#ffe2a0');g.addColorStop(.35,'#dd9d4d');g.addColorStop(.7,'#a95c2c');g.addColorStop(1,'#69371f');
+ if(kind===0){
+  ctx.rotate(-.25);ellipse(0,0,67,26,g);ctx.shadowBlur=0;
+  for(let j=-2;j<=2;j++){ctx.beginPath();ctx.ellipse(j*21,-7,5,17,.5,0,Math.PI*2);ctx.fillStyle='#f4d89d';ctx.fill();ctx.strokeStyle='#a76a35';ctx.stroke();}
+ }else if(kind===1){
+  ellipse(0,0,38,33,g);ctx.shadowBlur=0;ellipse(0,-5,14,11,'#70442d');
+  for(let j=0;j<28;j++){const a=j*2.4,rr=20+j%10;line(Math.cos(a)*rr,Math.sin(a)*rr*.8,Math.cos(a)*rr+3,Math.sin(a)*rr*.8-2,'#ffe6b4',2);}
+ }else if(kind===2){
+  ctx.beginPath();ctx.moveTo(-53,12);ctx.bezierCurveTo(-52,-42,51,-42,53,12);ctx.bezierCurveTo(34,-8,30,16,13,21);ctx.bezierCurveTo(-7,30,-36,-4,-53,12);ctx.fillStyle=g;ctx.fill();ctx.shadowBlur=0;
+  for(let j=-2;j<=2;j++){ctx.beginPath();ctx.moveTo(j*14-10,-24+Math.abs(j)*7);ctx.quadraticCurveTo(j*17,-5,j*16+9,15-Math.abs(j)*5);ctx.strokeStyle='#8b4c24';ctx.lineWidth=3;ctx.stroke();}
+ }else{
+  ellipse(0,0,37,13,'#8b512c');rect(-30,-20,60,24,'#c58b5d');ctx.shadowBlur=0;
+  for(let j=-2;j<=2;j++)line(j*10,2,j*8,-20,'#84512f',2);
+  const f=ctx.createLinearGradient(0,-59,0,-10);f.addColorStop(0,'#fff5dd');f.addColorStop(1,'#d5a18b');
+  ellipse(0,-25,35,16,f);ellipse(0,-39,26,13,f);ellipse(0,-50,16,11,f);ellipse(0,-57,6,7,f);ellipse(8,-44,3,2,'#cc6571');
+ }
+ ctx.restore();
+}
+function cookie(x,y,r){
+ ctx.save();ctx.translate(x,y);const g=ctx.createRadialGradient(-r*.3,-r*.4,0,0,0,r);
+ g.addColorStop(0,'#ffe3a3');g.addColorStop(.6,'#d9a351');g.addColorStop(1,'#9b602f');ellipse(0,0,r,r*.86,g);
+ for(let j=0;j<9;j++)ellipse(Math.sin(j*2.3)*r*.65,Math.cos(j*3.1)*r*.54,r*.09,r*.08,'#66412c');
+ ctx.restore();
+}
+function muffin(x,y,r){
+ ctx.save();ctx.translate(x,y);const g=ctx.createLinearGradient(0,-r,0,r);g.addColorStop(0,'#e7bb78');g.addColorStop(1,'#8a492b');
+ rect(-r*.65,0,r*1.3,r*.8,'#a46e60');for(let j=-3;j<=3;j++)line(j*r*.18,0,j*r*.14,r*.8,'#6f4d4a',2);
+ ellipse(0,-r*.1,r,r*.65,g);ellipse(-r*.5,-r*.2,r*.45,r*.42,g);ellipse(r*.5,-r*.2,r*.45,r*.42,g);
+ for(let j=0;j<7;j++)ellipse(Math.sin(j*2.5)*r*.7,Math.cos(j*3.2)*r*.35-r*.12,r*.09,r*.07,'#51475e');
+ ctx.restore();
+}
+function pie(x,y,r){
+ ctx.save();ctx.translate(x,y);ellipse(0,r*.15,r*1.1,r*.34,'#bfc6c3');ellipse(0,0,r,r*.5,'#d7a35b');ellipse(0,-r*.1,r*.9,r*.36,'#924552');
+ ctx.save();ctx.beginPath();ctx.ellipse(0,-r*.1,r*.88,r*.35,0,0,Math.PI*2);ctx.clip();
+ for(let j=-4;j<=4;j++){line(-r,j*r*.18-r*.7,r,j*r*.18+r*.6,'#efc784',r*.11);line(-r,j*r*.18+r*.6,r,j*r*.18-r*.7,'#efc784',r*.11);}
+ ctx.restore();
+ for(let j=0;j<20;j++){const a=j*Math.PI/10;ellipse(Math.cos(a)*r*.94,Math.sin(a)*r*.43,r*.1,r*.08,'#e2b269');}
+ ctx.restore();
+}
+function cake(x,y,r){
+ ctx.save();ctx.translate(x,y);ellipse(0,r*.55,r*1.2,r*.22,'#c9c5b8');rect(-r,-r*.45,r*2,r,'#b87b6d');ellipse(0,r*.55,r,r*.23,'#a36859');ellipse(0,-r*.45,r,r*.27,'#f4dfca');rect(-r,-r*.45,r*2,r*.16,'#f4dfca');
+ for(let j=-4;j<=4;j++){ellipse(j*r*.2,-r*.47,r*.1,r*.1,'#fff3de');ellipse(j*r*.2,r*.4,r*.1,r*.1,'#e6c4b3');}
+ for(let j=-2;j<=2;j++)ellipse(j*r*.3,-r*.57,r*.11,r*.14,'#b94f67');
+ ctx.restore();
+}
+function shelf(y,x=W*.2,w=W*.6){
+ const g=ctx.createLinearGradient(0,y,0,y+12);g.addColorStop(0,'#d5b284');g.addColorStop(.5,'#78503d');g.addColorStop(1,'#51382d');rect(x,y,w,12,g);line(x,y,x+w,y,'#edcf9d',2);
+}
+function steam(x,y,t){
+ for(let j=0;j<3;j++){const p=(t*.24+j*.3)%1;ctx.beginPath();ctx.moveTo(x+j*13,y-p*45);ctx.bezierCurveTo(x-12+j*13,y-25-p*45,x+18+j*13,y-44-p*45,x+j*13,y-60-p*45);ctx.strokeStyle='rgba(255,242,218,'+(.35*(1-p))+')';ctx.lineWidth=2;ctx.stroke();}
+}
+function draw(ms){
+ if(W!==$('theater').clientWidth||H!==$('theater').clientHeight)resize();
+ const t=reduce?0:ms*.001;if(launch){drawEscape(ms);requestAnimationFrame(draw);return;}
+ const theme=state.started?themes[sceneIndex]:['#092e40','#e8faf8','#174758','#2c9e9a'];
+ let g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,theme[0]);g.addColorStop(.7,theme[2]);g.addColorStop(1,'#142330');rect(0,0,W,H,g);
+ for(let j=0;j<12;j++)rect(j*W/12,0,2,H,'#e8f1ed0c');
+ g=ctx.createRadialGradient(W*.5,H*.34,0,W*.5,H*.4,W*.5);g.addColorStop(0,'#ffecc526');g.addColorStop(1,'#ffecc500');rect(0,0,W,H,g);
+ const S=Math.min(W/900,H/280);ctx.save();ctx.translate(W*.5,H*.59);ctx.scale(S,S);
+ if(!state.started){
+  rect(-220,-95,440,190,'#397e7a');rect(-233,85,466,16,'#142f36');rect(-205,-125,410,38,'#123b4c');label('SUGAR & STARS',0,-99,23,'#f7e5b8');
+  for(let j=0;j<16;j++){rect(-225+j*28,-82,29,28,j%2?'#e6f0db':'#284e61');ellipse(-211+j*28,-54,14,6,j%2?'#e6f0db':'#284e61');}
+  for(const x of [-190,80]){
+   rect(x,-36,112,98,'#16394b');rect(x+7,-29,98,84,'#deb87b');rect(x+12,-24,88,74,'#edcc92');
+   for(let j=0;j<3;j++)bread(x+25+j*32,37,12,j);line(x+55,-29,x+55,55,'#224854',5);line(x+7,10,x+105,10,'#224854',4);
+  }
+  rect(-53,-42,106,132,'#143945');rect(-42,-30,84,75,'#669397');rect(-42,55,84,24,'#24535b');ellipse(28,44,4,4,'#e8c676');line(0,-30,0,45,'#234b56',4);
+  rect(-290,67,36,26,'#41665b');for(let j=0;j<6;j++)ellipse(-272+Math.sin(j)*16,50+Math.cos(j)*12,12,21,'#719579');
+  rect(253,67,36,26,'#41665b');for(let j=0;j<6;j++)ellipse(271+Math.sin(j)*16,50+Math.cos(j)*12,12,21,'#719579');
+  ellipse(310,-107,20,20,'#f5e6bc');ellipse(318,-114,19,19,theme[0]);
+  for(let j=0;j<25;j++)ellipse(-390+(j*79)%780,-148+(j*43)%90,1,1,'#e9dcb8');
+ }else switch(sceneIndex){
+ case 0:{
+  rect(-280,-96,190,171,'#b78651');rect(-262,-78,154,120,'#352d2a');
+  g=ctx.createRadialGradient(-185,10,0,-185,0,90);g.addColorStop(0,'#ffc268');g.addColorStop(1,'#613a2b');rect(-256,-72,142,108,g);
+  shelf(19,-254,137);for(let j=0;j<3;j++)bread(-235+j*43,5,16,0);
+  label('FRESH BREAD',140,-75,24);shelf(81,-35,360);for(let j=0;j<4;j++)bread(10+j*80,58,35,j%2);steam(100,25,t);break;
+ }
+ case 1:{
+  for(let j=0;j<3;j++){
+   const x=-180+j*180;rect(x-65,-75,130,150,'#d7f5ff1f');ellipse(x,-75,65,17,'#c5e3df7a');ellipse(x,75,65,17,'#bfdfd655');
+   for(let k=0;k<9;k++)cookie(x-37+(k%3)*37,50-Math.floor(k/3)*34,22);
+   rect(x-70,-94,140,17,'#b99777');ellipse(x,-94,70,13,'#d4bea1');line(x-49,-50,x-49,54,'#f1fcf58a',4);
+  }
+  shelf(91,-275,550);break;
+ }
+ case 2:{
+  for(const x of [-205,205]){ellipse(x,83,28,28,'#263442');ellipse(x,83,18,18,'#c3a86d');ellipse(x,83,10,10,'#34414b');line(x,-15,x,65,'#c5aa70',7);}
+  shelf(51,-240,480);shelf(-26,-240,480);for(let j=0;j<3;j++)cake(-140+j*140,-62,47);
+  for(let j=0;j<5;j++)bread(-150+j*75,27,20,3);
+  line(240,-26,280,-26,'#cfb785',6);line(280,-26,280,-58,'#cfb785',6);break;
+ }
+ case 3:{
+  for(const x of [-255,255])rect(x,-128,10,234,'#c0ac8b');
+  for(let r=0;r<3;r++){const y=-53+r*65;shelf(y,-257,522);for(let j=0;j<7;j++)muffin(-205+j*68,y-24,22);}
+  for(const x of [-250,260])ellipse(x,111,14,14,'#263744');break;
+ }
+ case 4:{
+  rect(-290,-117,580,218,'#634b3c');rect(-273,-101,546,184,'#294a3e');shelf(-31,-270,540);shelf(72,-270,540);
+  for(let j=0;j<5;j++){const x=-235+j*45;rect(x,-82,27,49,['#8a9a6e','#c8aa73','#b98975'][j%3]);ellipse(x+13,-82,13,5,'#e3cfac');rect(x+6,-99,14,17,'#e0c598');}
+  ctx.save();ctx.translate(90,7+Math.sin(t)*3);ctx.rotate(-.04);rect(-129,-83,260,160,'#ae895b');rect(-120,-77,118,147,'#f3e8c8');rect(2,-77,118,147,'#f8eed4');
+  for(let j=0;j<8;j++){line(-105,-55+j*15,-21,-55+j*15,'#b6a17b',2);line(18,-55+j*15,101-(j%3)*10,-55+j*15,'#b6a17b',2);}
+  line(0,-77,0,70,'#9c805c',3);ctx.restore();break;
+ }
+ case 5:{
+  ctx.beginPath();ctx.ellipse(0,-5,245,126,0,Math.PI,Math.PI*2);ctx.strokeStyle='#bb9461';ctx.lineWidth=13;ctx.stroke();
+  ellipse(0,24,270,75,'#8a673d');for(let j=0;j<9;j++)bread(-205+(j%5)*103,7-Math.floor(j/5)*45,43,1);
+  ctx.beginPath();ctx.moveTo(-250,32);ctx.quadraticCurveTo(0,142,250,32);ctx.lineTo(218,108);ctx.lineTo(-218,108);ctx.closePath();ctx.fillStyle='#ac8451';ctx.fill();
+  for(let j=-10;j<=10;j++)line(j*21,52,j*19,104,'#d5ad74',3);
+  for(let j=0;j<4;j++){ctx.beginPath();ctx.ellipse(0,45+j*16,238-j*6,25,0,0,Math.PI);ctx.strokeStyle='#62482d';ctx.lineWidth=3;ctx.stroke();}break;
+ }
+ case 6:{
+  rect(-320,74,640,23,'#263644');
+  for(let j=0;j<21;j++){const x=-310+((j*32+t*22)%640);ellipse(x,86,12,12,'#7a8e9b');ellipse(x,86,4,4,'#253946');}
+  for(let j=0;j<4;j++){
+   const x=-240+j*145,y=j%2?-40:0;rect(x,y,115,72,['#c7c3e7','#c9dfdf','#d8b8cf','#c3cfdc'][j]);rect(x-4,y-9,123,15,'#ece6ee');rect(x+48,y-10,15,82,'#7894aa');
+   ctx.beginPath();ctx.ellipse(x+47,y-17,23,11,-.4,0,Math.PI*2);ctx.ellipse(x+72,y-17,23,11,.4,0,Math.PI*2);ctx.strokeStyle='#a9c4d2';ctx.lineWidth=5;ctx.stroke();
+  }break;
+ }
+ case 7:{
+  for(let j=0;j<3;j++){
+   const x=-205+j*205,y=j===1?-30:18;rect(x-8,y+15,16,80-y,'#c0a16f');ellipse(x,94,72,12,'#c5ae84');ellipse(x,y+18,93,13,'#d6c7ac');pie(x,y,78);
+   if(j===1){ctx.beginPath();ctx.ellipse(x,y-14,95,73,0,Math.PI,Math.PI*2);ctx.lineTo(x+95,y+12);ctx.lineTo(x-95,y+12);ctx.closePath();ctx.fillStyle='#d3efff15';ctx.fill();ctx.strokeStyle='#e5f7fa6b';ctx.lineWidth=2;ctx.stroke();ellipse(x,y-89,8,8,'#dfd0a6');}
+  }
+  steam(-230,-10,t);break;
+ }
+ case 8:{
+  rect(-7,-105,14,205,'#ac8c59');
+  for(let r=0;r<3;r++){const y=-49+r*70,w=115+r*65;ellipse(0,y,w,14,'#d7bd82');ellipse(0,y+5,w,9,'#8b733e');const count=3+r*2;for(let j=0;j<count;j++)bread((j-(count-1)/2)*54,y-19,23,3);}
+  ellipse(0,-116,15,15,'#dfbe70');break;
+ }
+ case 9:{
+  rect(-240,22,210,75,'#496f72');rect(-220,-55,170,80,'#63908b');rect(-202,-40,134,34,'#153e48');label('SUGAR & STARS',-135,-18,12,'#edddb3');
+  for(let r=0;r<3;r++)for(let j=0;j<5;j++)ellipse(-204+j*30,13+r*21,9,7,'#d8bd89');
+  rect(-246,91,222,13,'#264c55');shelf(84,20,260);for(let j=0;j<4;j++)bread(60+j*65,59,27,j%3);
+  ctx.save();ctx.translate(185,-49+Math.sin(t)*3);ctx.beginPath();ctx.arc(0,-10,25,Math.PI,0);ctx.strokeStyle='#d9b76d';ctx.lineWidth=9;ctx.stroke();rect(-34,-7,68,57,'#d8b269');ellipse(0,16,7,7,'#805e2c');rect(-3,20,6,15,'#805e2c');ctx.restore();break;
+ }
+ }
+ ctx.restore();
+ for(let j=0;j<18;j++){const x=((j*97.31+t*6)%W),y=(j*37.7)%H;ctx.globalAlpha=.12+.08*Math.sin(t+j);ellipse(x,y,1.3,1.3,'#fff0c5');}ctx.globalAlpha=1;
+ const elapsed=(ms-rewardAt)/1000;
+ if(elapsed>=0&&elapsed<2.5){
+  const y=H*.65-Math.min(elapsed,1.5)*H*.25;ctx.save();ctx.translate(W*.5,y);ctx.rotate(elapsed*1.5);ellipse(0,0,28,28,'#f5d48a');ellipse(0,0,22,22,'#bd893e');ellipse(0,0,18,18,'#ffe7a0');ctx.restore();
+  for(let k=0;k<18;k++){const a=k*Math.PI/9;ellipse(W*.5+Math.cos(a)*elapsed*70,y+Math.sin(a)*elapsed*40,2,2,'#ffe5a5');}
+ }
+ requestAnimationFrame(draw);
+}
+function drawEscape(ms){
+ const t=reduce?8:(ms-escapeAt)/1000;
+ let g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,'#6e95b2');g.addColorStop(.45,'#e9b18e');g.addColorStop(1,'#fff0be');rect(0,0,W,H,g);
+ const rise=Math.min(Math.max(t/7,0),1);ellipse(W*.5,H*(.67-rise*.22),Math.min(W,H)*.17,Math.min(W,H)*.17,'#ffe4a1');
+ for(let i=0;i<7;i++){ctx.globalAlpha=.4;ellipse(((i*W*.23+t*5)%(W+250))-100,H*(.16+(i%3)*.12),W*.1,H*.025,'#fff5e6');}ctx.globalAlpha=1;
+ for(const side of [0,1]){
+  const x=side?W*.72:-W*.05;rect(x,H*.22,W*.33,H*.5,side?'#b69176':'#c7ae8c');
+  for(let row=0;row<3;row++)for(let col=0;col<3;col++){rect(x+30+col*W*.09,H*.29+row*H*.13,W*.055,H*.075,'#62797e');rect(x+31+col*W*.09,H*.29+row*H*.13,3,H*.075,'#e2d3b2');}
+ }
+ const floor=ctx.createLinearGradient(0,H*.68,0,H);floor.addColorStop(0,'#bfae92');floor.addColorStop(1,'#716658');rect(0,H*.68,W,H*.32,floor);
+ for(let i=0;i<12;i++)line(W*.5+(i-6)*W*.16,H,W*.5+(i-6)*W*.018,H*.68,'#5b514b44',1);
+ for(let i=0;i<7;i++)line(0,H*.68+(i/7)**2*H*.32,W,H*.68+(i/7)**2*H*.32,'#5b514b44',1);
+ for(let i=0;i<18;i++){rect(i*W/18,0,W/18+1,H*.095,i%2?'#f1dfbc':'#527963');ellipse((i+.5)*W/18,H*.095,W/36,H*.018,i%2?'#f1dfbc':'#527963');}
+ for(let j=0;j<90;j++){
+  const x=(j*91.13+t*(18+j%19))%W,y=((j*47.7+t*(30+j%23))%(H+90))-50;
+  ctx.save();ctx.translate(x,y);ctx.rotate(t+j);rect(-3,-6,6,12,['#e7ad50','#cf7467','#64977e','#f6d69a'][j%4]);ctx.restore();
+ }
+ for(let k=0;k<4;k++){
+  const phase=(t*.45+k*.24)%1,cx=W*(.15+k*.23),cy=H*(.2+(k%2)*.12);
+  for(let j=0;j<24;j++){const a=j*Math.PI/12,r=phase*90;ctx.globalAlpha=1-phase;line(cx+Math.cos(a)*r*.8,cy+Math.sin(a)*r*.8,cx+Math.cos(a)*r,cy+Math.sin(a)*r,['#fff0a8','#fff9dd','#d99968','#ffe7ae'][k],2);}
+ }
+ ctx.globalAlpha=1;
+}
+requestAnimationFrame(draw);render();
+})();
+</script>
+</body>
+</html>
